@@ -3,6 +3,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
 
 const apiRoutes = require("./routes/api.js");
 const fccTestingRoutes = require("./routes/fcctesting.js");
@@ -15,6 +16,9 @@ app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(helmet());
+app.use(helmet.hidePoweredBy({setTo: "PHP 4.2.0"}));
 
 //Index page (static HTML)
 app.route('/')
