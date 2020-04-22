@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
+const noCache = require("nocache");
 
 const apiRoutes = require("./routes/api.js");
 const fccTestingRoutes = require("./routes/fcctesting.js");
@@ -21,7 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
 app.use(helmet.hidePoweredBy({setTo: "PHP 4.2.0"}));
-app.use(helmet.noCache());
+//app.use(helmet.noCache());
+app.use(noCache());
 
 mongoose.connect(process.env.DATABASE,{
   useNewUrlParser: true,
