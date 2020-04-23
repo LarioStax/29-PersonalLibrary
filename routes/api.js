@@ -72,9 +72,19 @@ module.exports = function (app) {
     })
     
     .post(function(req, res){
-      var bookid = req.params.id;
-      var comment = req.body.comment;
-      //json res format same as .get
+      let bookId = req.params.id;
+      let comment = req.body.comment;
+      Book.findById(bookId, "-__v", function(err, foundBook) {
+        if (err) {
+          console.log(err);
+        } if (!foundBook) {
+          res.json("No book found with provided id!");
+        } else {
+          foundBook.comments.push(comment);
+          foundBook.save();
+          res.json(foundBook);
+        }
+      })
     })
     
     .delete(function(req, res){
