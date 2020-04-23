@@ -21,8 +21,17 @@ module.exports = function (app) {
     })
     
     .post(function (req, res){
-      var title = req.body.title;
-      //response will contain new book object including atleast _id and title
+      let bookTitle = req.body.title.trim(); //Prevent only spaces
+      if (!bookTitle) {
+        return res.json("Invalid title!")
+      }
+      Book.create({title: bookTitle}, function (err, createdBook) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(createdBook);
+        }
+      })
     })
     
     .delete(function(req, res){
