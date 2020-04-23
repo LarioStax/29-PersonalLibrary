@@ -89,7 +89,6 @@ module.exports = function (app) {
     
     .delete(function(req, res){
       let bookId = req.params.id;
-      console.log("request came");
       Book.findByIdAndRemove(bookId, function(err) {
         if (err) {
           return res.json(`Could not delete ${bookId}!`)

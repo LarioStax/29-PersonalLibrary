@@ -17,19 +17,23 @@ $( document ).ready(function() {
         html: items.join('')
         }).appendTo('#display');
     });
+
+    function populateComments(data) {
+      comments = [];
+      $.each(data.comments, function(i, val) {
+        comments.push('<li>' +val+ '</li>');
+      });
+      comments.push('<br><form id="newCommentForm"><input style="width:300px" type="text" class="form-control" id="commentToAdd" name="comment" placeholder="New Comment"></form>');
+      comments.push('<br><button class="btn btn-info addComment" id="'+ data._id+'">Add Comment</button>');
+      comments.push('<button class="btn btn-danger deleteBook" id="'+ data._id+'">Delete Book</button>');
+      $('#detailComments').html(comments.join(''));
+    }
     
     var comments = [];
     $('#display').on('click','li.bookItem',function() {
       $("#detailTitle").html('<b>'+itemsRaw[this.id].title+'</b> (id: '+itemsRaw[this.id]._id+')');
       $.getJSON('/api/books/'+itemsRaw[this.id]._id, function(data) {
-        comments = [];
-        $.each(data.comments, function(i, val) {
-          comments.push('<li>' +val+ '</li>');
-        });
-        comments.push('<br><form id="newCommentForm"><input style="width:300px" type="text" class="form-control" id="commentToAdd" name="comment" placeholder="New Comment"></form>');
-        comments.push('<br><button class="btn btn-info addComment" id="'+ data._id+'">Add Comment</button>');
-        comments.push('<button class="btn btn-danger deleteBook" id="'+ data._id+'">Delete Book</button>');
-        $('#detailComments').html(comments.join(''));
+        populateComments(data); //gets all comments and orders them in a list
       });
     });
     
@@ -45,39 +49,33 @@ $( document ).ready(function() {
     });  
     
     $('#bookDetail').on('click','button.addComment',function() {
-      var newComment = $('#commentToAdd').val();
+      // var newComment = $('#commentToAdd').val();
       $.ajax({
-        url: '/api/books/'+this.id,
+        url: '/api/books'+this.id,
         type: 'post',
         dataType: 'json',
         data: $('#newCommentForm').serialize(),
         success: function(data) {
-          comments.unshift(newComment); //adds new comment to top of list
-          $('#detailComments').html(comments.join(''));
+          // comments.unshift(newComment); //adds new comment to top of list
+          // $('#detailComments').html(comments.join(''));
+          populateComments(data); //adds new comment to the end of the list
         }
       });
     });
     
     $('#newBook').click(function() {
-      $.ajax({
-        url: '/api/books',
-        type: 'post',
-        dataType: 'json',
-        data: $('#newBookForm').serialize(),
-        success: function(data) {
-          //update list
-        }
-      });
+      location.reload();
     });
-    
+
     $('#deleteAllBooks').click(function() {
       $.ajax({
         url: '/api/books',
         type: 'delete',
         dataType: 'json',
-        data: $('#newBookForm').serialize(),
+        data: $('#newBookForm'),
         success: function(data) {
           //update list
+          location.reload();
         }
       });
     }); 
