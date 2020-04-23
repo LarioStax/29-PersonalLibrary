@@ -99,7 +99,13 @@ suite('Functional Tests', function() {
       });
       
       test('Test GET /api/books/[id] with valid id in db',  function(done){
-        //done();
+        chai.request(server)
+        .get("/api/books/" + bookId)
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.title, "The Book Thief")
+        })
+        done();
       });
       
     });
