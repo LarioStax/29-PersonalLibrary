@@ -13,6 +13,8 @@ var server = require('../app.js');
 
 chai.use(chaiHttp);
 
+let bookId = "" //will be needed for tests!
+
 suite('Functional Tests', function() {
 
   /*
@@ -47,6 +49,7 @@ suite('Functional Tests', function() {
         .end(function(err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.body.title, "The Book Thief")
+          bookId = res.body._id;
         })
         done();
       });
@@ -86,7 +89,13 @@ suite('Functional Tests', function() {
     suite('GET /api/books/[id] => book object with [id]', function(){
       
       test('Test GET /api/books/[id] with id not in db',  function(done){
-        //done();
+        chai.request(server)
+        .get("/api/books/" + bookId + "hj")
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.body, "No book found with provided id!")
+        })
+        done();
       });
       
       test('Test GET /api/books/[id] with valid id in db',  function(done){

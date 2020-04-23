@@ -61,9 +61,7 @@ module.exports = function (app) {
     .get(function (req, res){
       let bookId = req.params.id;
       Book.findById(bookId, "-__v", function(err, foundBook) {
-        if (err) {
-          console.log(err);
-        } if (!foundBook) {
+        if (err || !foundBook) {
           res.json("No book found with provided id!");
         } else {
           res.json(foundBook);
