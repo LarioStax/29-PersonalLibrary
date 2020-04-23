@@ -88,8 +88,13 @@ module.exports = function (app) {
     })
     
     .delete(function(req, res){
-      var bookid = req.params.id;
-      //if successful response will be 'delete successful'
+      let bookId = req.params.id;
+      Book.findByIdAndRemove(bookId, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        res.json("Book deleted!");
+      })
     });
   
 };
