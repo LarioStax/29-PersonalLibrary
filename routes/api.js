@@ -16,8 +16,19 @@ module.exports = function (app) {
 
   app.route('/api/books')
     .get(function (req, res){
-      //response will be array of book objects
-      //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
+      Book.aggregate([
+        { $project: {
+          _id: 1,
+          title: 1,
+          commentcount: { $size: "$comments"}
+        }}
+      ]).exec( function (err, foundBooks) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(foundBooks);
+        }
+      })
     })
     
     .post(function (req, res){
